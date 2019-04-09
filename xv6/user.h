@@ -24,6 +24,10 @@ char* sbrk(int);
 int sleep(int);
 int uptime(void);
 int ps(void);
+int create_container(void);
+int destroy_container(int);
+int join_container(int);
+int leave_container(void);
 
 // ulib.c
 int stat(const char*, struct stat*);

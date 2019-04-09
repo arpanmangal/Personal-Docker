@@ -104,6 +104,10 @@ extern int sys_wait(void);
 extern int sys_write(void);
 extern int sys_uptime(void);
 extern int sys_ps(void);
+extern int sys_create_container(void);
+extern int sys_destroy_container(int);
+extern int sys_join_container(int);
+extern int sys_leave_container(void);
 
 static int (*syscalls[])(void) = {
 [SYS_fork]    sys_fork,
@@ -128,6 +132,10 @@ static int (*syscalls[])(void) = {
 [SYS_mkdir]   sys_mkdir,
 [SYS_close]   sys_close,
 [SYS_ps]      sys_ps,
+[SYS_creat_cont] sys_create_container,
+[SYS_delet_cont] sys_destroy_container,
+[SYS_join_cont] sys_join_container,
+[SYS_leave_cont] sys_leave_container,
 };
 
 void

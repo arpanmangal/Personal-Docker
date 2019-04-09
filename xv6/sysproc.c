@@ -93,3 +93,35 @@ sys_uptime(void)
 int sys_ps(void){
   return get_ps();
 }
+
+#define MAX_CONTAINERS 16
+
+struct container
+{
+  int allocated;
+};
+
+struct container container_list[MAX_CONTAINERS];
+
+int sys_create_container(void){
+  for(int i=0;i<MAX_CONTAINERS;i++){
+    if (!container_list[i].allocated)
+      container_list[i].allocated=1;
+      return i;
+  }
+  return -1;
+}
+
+int sys_destroy_container(void){
+  int cont_id;
+
+  if(argint(0, &cont_id) < 0)
+    return -1;
+  
+  if (container_list[cont_id].allocated){
+    container_list[cont_id].allocated=0;
+    return 0;
+  }
+  else
+    return -2;
+}

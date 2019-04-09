@@ -21,3 +21,7 @@
 #define SYS_mkdir  20
 #define SYS_close  21
 #define SYS_ps     22
+#define SYS_creat_cont 23
+#define SYS_delet_cont 24
+#define SYS_join_cont 25
+#define SYS_leave_cont 26
