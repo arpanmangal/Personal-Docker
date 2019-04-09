@@ -88,6 +88,7 @@ allocproc(void)
 found:
   p->state = EMBRYO;
   p->pid = nextpid++;
+  p->container_id = 0;
 
   release(&ptable.lock);
 
@@ -534,11 +535,38 @@ procdump(void)
 }
 
 int get_ps(void){
+  int my_cont_id = myproc()->container_id;
   struct proc *p;
   for(p = ptable.proc; p < &ptable.proc[NPROC]; p++){
-    if(p->state == UNUSED)
+    if(p->state == UNUSED && p->container_id==my_cont_id)
       continue;
     cprintf("pid: %d name: %s\n",p->pid,p->name);
   }
   return 0;
 } 
+
+int proc_join_container(int cont_id){
+  int pid = myproc()->pid;
+  struct proc *p;
+  acquire(&ptable.lock);
+  for(p = ptable.proc; p < &ptable.proc[NPROC]; p++){
+    if(p->pid == pid){
+      p->container_id = cont_id;
+    }
+  }
+  release(&ptable.lock);
+  return 0;
+}
+
+int proc_leave_container(){
+  int pid = myproc()->pid;
+  struct proc *p;
+  acquire(&ptable.lock);
+  for(p = ptable.proc; p < &ptable.proc[NPROC]; p++){
+    if(p->pid == pid){
+      p->container_id = 0;
+    }
+  }
+  release(&ptable.lock);
+  return 0;
+}
