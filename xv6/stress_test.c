@@ -31,7 +31,7 @@ main(void)
   /* Fork some processes and join them to some containers */
   if (fork() == 0) {
     printf(1, "pid1:%d\n", getpid());
-    if (join_container(container_ids[0]) > 0) {
+    if (join_container(container_ids[0]) >= 0) {
       printf(1, "JOINED TO A NON-EXISTENT CONTAINER!! %d %d \n", 0, container_ids[0]);
       exit();
     }
@@ -62,7 +62,7 @@ main(void)
       exit();
     }
 
-    sleep(5); // Some wait
+    sleep(500); // Some wait
     ps(); // Print the processes
     exit();
   }
@@ -80,7 +80,7 @@ main(void)
         printf(1, "ERROR JOINING CONTAINER!! %d %d \n", 1, container_ids[1]);
         exit();
       }    
-      sleep(10);
+      sleep(1000);
       exit();
     }
     wait();
