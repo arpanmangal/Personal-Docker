@@ -19,11 +19,11 @@ main(void)
   }
 
   /* Destroy some random containers */
-  if (destroy_container([container_ids[0]]) < 0) {
+  if (destroy_container(container_ids[0]) < 0) {
     printf(1, "ERROR DESTROYING CONTAINER!! %d %d \n", 0, container_ids[0]);
     exit();
   }
-  if (destroy_container([container_ids[3]]) < 0) {
+  if (destroy_container(container_ids[3]) < 0) {
     printf(1, "ERROR DESTROYING CONTAINER!! %d %d \n", 3, container_ids[3]);
     exit();
   }
@@ -83,6 +83,7 @@ main(void)
       sleep(10);
       exit();
     }
+    wait();
     exit();
   }
 
