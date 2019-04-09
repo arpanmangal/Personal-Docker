@@ -121,6 +121,7 @@ int sys_destroy_container(void){
 
   if (cont_id>0 && container_list[cont_id].allocated){
     container_list[cont_id].allocated=0;
+    // cleanup_processes(cont_id);
     return 0;
   }
   else

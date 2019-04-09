@@ -538,9 +538,10 @@ int get_ps(void){
   int my_cont_id = myproc()->container_id;
   struct proc *p;
   for(p = ptable.proc; p < &ptable.proc[NPROC]; p++){
-    if(p->state == UNUSED && p->container_id==my_cont_id)
+    if(p->state == UNUSED)
       continue;
-    cprintf("pid: %d name: %s\n",p->pid,p->name);
+    if (p->container_id==my_cont_id)
+      cprintf("pid: %d name: %s\n",p->pid,p->name);
   }
   return 0;
 } 
