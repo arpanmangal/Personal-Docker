@@ -201,6 +201,9 @@ fork(void)
   np->parent = curproc;
   *np->tf = *curproc->tf;
 
+  // container id copying
+  np->container_id = curproc->container_id;
+
   // Clear %eax so that fork returns 0 in the child.
   np->tf->eax = 0;
 
@@ -536,6 +539,7 @@ procdump(void)
 
 int get_ps(void){
   int my_cont_id = myproc()->container_id;
+  // int my_pid = myproc()->pid;
   struct proc *p;
   for(p = ptable.proc; p < &ptable.proc[NPROC]; p++){
     if(p->state == UNUSED)
@@ -568,6 +572,7 @@ int proc_leave_container(){
       p->container_id = 0;
     }
   }
+  p->container_id = p->parent->container_id;
   release(&ptable.lock);
   return 0;
 }
