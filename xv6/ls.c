@@ -23,7 +23,7 @@ fmtname(char *path)
 }
 
 void
-lsf(char *path)
+ls(char *path)
 {
   char buf[512], *p;
   int fd;
@@ -76,10 +76,10 @@ main(int argc, char *argv[])
   int i;
 
   if(argc < 2){
-    lsf(".");
+    ls(".");
     exit();
   }
   for(i=1; i<argc; i++)
-    lsf(argv[i]);
+    ls(argv[i]);
   exit();
 }

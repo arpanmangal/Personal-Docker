@@ -25,5 +25,3 @@
 #define SYS_destroy_container 24
 #define SYS_join_container 25
 #define SYS_leave_container 26
-#define SYS_ls     23
-#define SYS_cat    24
