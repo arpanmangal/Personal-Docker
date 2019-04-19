@@ -58,3 +58,11 @@ struct proc {
 //   original data and bss
 //   fixed-size stack
 //   expandable heap
+
+#define MAX_CONTAINERS 16
+#define MAX_PROC_PER_CONTAINER 16
+
+struct container_desc{
+  int allocated;
+  int procs[MAX_PROC_PER_CONTAINER];
+};

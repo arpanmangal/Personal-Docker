@@ -20,6 +20,11 @@ extern void trapret(void);
 
 static void wakeup1(void *chan);
 
+struct {
+  struct spinlock lock;
+  struct container_desc container_list[MAX_CONTAINERS];
+} container_table;
+
 void
 pinit(void)
 {
@@ -550,7 +555,32 @@ int get_ps(void){
   return 0;
 } 
 
-int proc_join_container(int cont_id){
+int create_container(){
+  // acquire(&container_table.lock);
+  for(int i=1;i<MAX_CONTAINERS;i++){
+    if (container_table.container_list[i].allocated==0){
+      container_table.container_list[i].allocated=1;
+      return i;
+    }
+  }
+  // release(&container_table.lock);
+  return -1;
+}
+
+int destroy_container(int cont_id){
+  if (cont_id>0 && container_table.container_list[cont_id].allocated){
+    container_table.container_list[cont_id].allocated=0;
+    // cleanup_processes(cont_id);
+    return 0;
+  }
+  else
+    return -1;
+}
+
+int join_container(int cont_id){
+  if (cont_id<0 || container_table.container_list[cont_id].allocated!=1)
+    return -1;
+
   int pid = myproc()->pid;
   struct proc *p;
   acquire(&ptable.lock);
@@ -563,7 +593,7 @@ int proc_join_container(int cont_id){
   return 0;
 }
 
-int proc_leave_container(){
+int leave_container(){
   int pid = myproc()->pid;
   struct proc *p;
   acquire(&ptable.lock);

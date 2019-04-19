@@ -94,23 +94,8 @@ int sys_ps(void){
   return get_ps();
 }
 
-#define MAX_CONTAINERS 16
-
-struct container
-{
-  int allocated;
-};
-
-struct container container_list[MAX_CONTAINERS];
-
 int sys_create_container(void){
-  for(int i=1;i<MAX_CONTAINERS;i++){
-    if (container_list[i].allocated==0){
-      container_list[i].allocated=1;
-      return i;
-    }
-  }
-  return -1;
+  return create_container();
 }
 
 int sys_destroy_container(void){
@@ -118,14 +103,7 @@ int sys_destroy_container(void){
 
   if(argint(0, &cont_id) < 0)
     return -1;
-
-  if (cont_id>0 && container_list[cont_id].allocated){
-    container_list[cont_id].allocated=0;
-    // cleanup_processes(cont_id);
-    return 0;
-  }
-  else
-    return -2;
+  return destroy_container(cont_id);
 }
 
 int sys_join_container(void){
@@ -134,13 +112,9 @@ int sys_join_container(void){
   if(argint(0, &cont_id) < 0)
     return -1;
 
-  if (cont_id>0 && container_list[cont_id].allocated){
-    return proc_join_container(cont_id);
-  }
-  else
-    return -1;
+  return join_container(cont_id);
 }
 
 int sys_leave_container(void){
-  return proc_leave_container();
+  return leave_container();
 }

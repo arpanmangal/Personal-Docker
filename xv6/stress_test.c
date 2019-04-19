@@ -10,13 +10,17 @@ main(void)
 {
   /* Create some containers */
   uint container_ids[MAX_CONTAINERS];
+  printf(1,"container ids allocated\n");
   for (int i = 0; i < MAX_CONTAINERS; i++) {
     container_ids[i] = create_container ();
+    printf(1,"%d ",container_ids[i]);
     if (container_ids[i] < 0) {
       printf(1, "ERROR CREATING CONTAINER!! %d %d \n", i, container_ids[i]);
       exit();
     }
   }
+  printf(1,"\n");
+  
 
   /* Destroy some random containers */
   if (destroy_container(container_ids[0]) < 0) {
