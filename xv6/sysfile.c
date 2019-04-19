@@ -443,3 +443,21 @@ sys_pipe(void)
   fd[1] = fd1;
   return 0;
 }
+
+int
+sys_ls (void) {
+  cprintf("hey");
+
+  return 0;
+}
+
+int
+sys_cat (void) {
+  int fid;
+  if(argint(0, &fid) < 0)
+    return -1;
+
+  cprintf ("cat %d\n", fid);
+
+  return 0;
+}
