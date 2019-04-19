@@ -28,6 +28,8 @@ int create_container(void);
 int destroy_container(int);
 int join_container(int);
 int leave_container(void);
+int ls(void);
+int cat(int);
 
 // ulib.c
 int stat(const char*, struct stat*);

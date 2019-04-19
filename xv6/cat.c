@@ -5,7 +5,7 @@
 char buf[512];
 
 void
-cat(int fd)
+catf(int fd)
 {
   int n;
 
@@ -27,7 +27,7 @@ main(int argc, char *argv[])
   int fd, i;
 
   if(argc <= 1){
-    cat(0);
+    catf(0);
     exit();
   }
 
@@ -36,7 +36,7 @@ main(int argc, char *argv[])
       printf(1, "cat: cannot open %s\n", argv[i]);
       exit();
     }
-    cat(fd);
+    catf(fd);
     close(fd);
   }
   exit();
