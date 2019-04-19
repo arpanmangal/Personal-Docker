@@ -20,11 +20,6 @@ extern void trapret(void);
 
 static void wakeup1(void *chan);
 
-struct {
-  struct spinlock lock;
-  struct container_desc container_list[MAX_CONTAINERS];
-} container_table;
-
 void
 pinit(void)
 {
@@ -560,6 +555,7 @@ int create_container(){
   for(int i=1;i<MAX_CONTAINERS;i++){
     if (container_table.container_list[i].allocated==0){
       container_table.container_list[i].allocated=1;
+      // release(&container_table.lock);
       return i;
     }
   }
@@ -569,8 +565,22 @@ int create_container(){
 
 int destroy_container(int cont_id){
   if (cont_id>0 && container_table.container_list[cont_id].allocated){
+    // acquire(&container_table.lock);
     container_table.container_list[cont_id].allocated=0;
-    // cleanup_processes(cont_id);
+    
+    // cleanup_processes
+    int pid;
+    acquire(&ptable.lock);
+    for(int i=0;i<MAX_PROC_PER_CONTAINER;i++){
+      if (container_table.container_list[cont_id].procs[i]>0){
+        pid = container_table.container_list[cont_id].procs[i];
+        ptable.proc[pid].container_id=0;
+      }
+    }
+
+    release(&ptable.lock);
+    // release(&container_table.lock);
+    
     return 0;
   }
   else
@@ -583,6 +593,22 @@ int join_container(int cont_id){
 
   int pid = myproc()->pid;
   struct proc *p;
+
+  // find a place in container
+  int found_place=0;
+  // acquire(&container_table.lock);
+  for(int i=0;i<MAX_PROC_PER_CONTAINER;i++){
+    if (container_table.container_list[cont_id].procs[i]==0){
+      found_place=1;
+      container_table.container_list[cont_id].procs[i]=pid;
+      break;
+    }
+  }
+  // release(&container_table.lock);
+  if (found_place==0)
+    return -1;
+
+  // update process container id
   acquire(&ptable.lock);
   for(p = ptable.proc; p < &ptable.proc[NPROC]; p++){
     if(p->pid == pid){
@@ -590,12 +616,30 @@ int join_container(int cont_id){
     }
   }
   release(&ptable.lock);
+
   return 0;
 }
 
 int leave_container(){
   int pid = myproc()->pid;
   struct proc *p;
+
+  // empty the place in container
+  int cont_id = myproc()->container_id;
+  int found_place=0;
+  // acquire(&container_table.lock);
+  for(int i=0;i<MAX_PROC_PER_CONTAINER;i++){
+    if (container_table.container_list[cont_id].procs[i]==pid){
+      found_place=1;
+      container_table.container_list[cont_id].procs[i]=0;
+      break;
+    }
+  }
+  // release(&container_table.lock);
+  if (found_place==0)
+    return -1;
+
+  // update process container id
   acquire(&ptable.lock);
   for(p = ptable.proc; p < &ptable.proc[NPROC]; p++){
     if(p->pid == pid){

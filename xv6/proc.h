@@ -66,3 +66,8 @@ struct container_desc{
   int allocated;
   int procs[MAX_PROC_PER_CONTAINER];
 };
+
+struct {
+  // struct spinlock lock;
+  struct container_desc container_list[MAX_CONTAINERS];
+} container_table;
