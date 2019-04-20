@@ -5,9 +5,15 @@
 char buf[512];
 
 void
-cat(int fd)
+cat(char *path)
 {
-  int n;
+  int n, fd;
+
+  if((fd = open(path, 0)) < 0){
+    printf(1, "cat: cannot open %s\n", path);
+    exit();
+  }
+  
 
   while((n = read(fd, buf, sizeof(buf))) > 0) {
     if (write(1, buf, n) != n) {
@@ -21,23 +27,23 @@ cat(int fd)
   }
 }
 
-int
-main(int argc, char *argv[])
-{
-  int fd, i;
+// int
+// main(int argc, char *argv[])
+// {
+//   int fd, i;
 
-  if(argc <= 1){
-    cat(0);
-    exit();
-  }
+//   if(argc <= 1){
+//     cat(0);
+//     exit();
+//   }
 
-  for(i = 1; i < argc; i++){
-    if((fd = open(argv[i], 0)) < 0){
-      printf(1, "cat: cannot open %s\n", argv[i]);
-      exit();
-    }
-    cat(fd);
-    close(fd);
-  }
-  exit();
-}
+//   for(i = 1; i < argc; i++){
+//     if((fd = open(argv[i], 0)) < 0){
+//       printf(1, "cat: cannot open %s\n", argv[i]);
+//       exit();
+//     }
+//     cat(fd);
+//     close(fd);
+//   }
+//   exit();
+// }
