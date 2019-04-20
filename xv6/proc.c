@@ -542,10 +542,9 @@ int get_ps(void){
   // int my_pid = myproc()->pid;
   struct proc *p;
   for(p = ptable.proc; p < &ptable.proc[NPROC]; p++){
-    if(p->state == UNUSED)
+    if(p->state == UNUSED || p->killed==1 || p->container_id!=my_cont_id)
       continue;
-    if (p->container_id==my_cont_id)
-      cprintf("pid: %d name: %s\n",p->pid,p->name);
+    cprintf("pid: %d name: %s\n",p->pid,p->name);
   }
   return 0;
 } 
@@ -569,16 +568,11 @@ int destroy_container(int cont_id){
     container_table.container_list[cont_id].allocated=0;
     
     // cleanup_processes
-    int pid;
-    acquire(&ptable.lock);
     for(int i=0;i<MAX_PROC_PER_CONTAINER;i++){
       if (container_table.container_list[cont_id].procs[i]>0){
-        pid = container_table.container_list[cont_id].procs[i];
-        ptable.proc[pid].container_id=0;
+        kill(container_table.container_list[cont_id].procs[i]);
       }
     }
-
-    release(&ptable.lock);
     // release(&container_table.lock);
     
     return 0;

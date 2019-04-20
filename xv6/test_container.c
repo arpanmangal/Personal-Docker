@@ -9,32 +9,45 @@ int main(int argc, char *argv[])
     int cont_id2 = create_container();
     printf(1,"Parent pid %d\n",getpid());
 
-    join_container(cont_id2);
-    if (fork()==0){
-        printf(1,"%d Before Joining\n",getpid());
-        ps();
-        join_container(cont_id1);
-        printf(1,"%d After Joining\n",getpid());
-        ps();
-        sleep(200);
-        exit();
-    }
+    // join_container(cont_id2);
+    // if (fork()==0){
+    //     printf(1,"%d Before Joining\n",getpid());
+    //     ps();
+    //     join_container(cont_id1);
+    //     printf(1,"%d After Joining\n",getpid());
+    //     ps();
+    //     sleep(200);
+    //     exit();
+    // }
+
+    // if (fork()==0){
+    //     sleep(100);
+    //     join_container(cont_id1);
+    //     printf(1,"%d After Joining\n",getpid());
+    //     ps();
+    //     leave_container();
+    //     printf(1,"%d After Leaving\n",getpid());
+    //     ps();
+    //     sleep(100);
+    //     exit();
+    // }
+
+    // leave_container();
+    // wait();
+    // wait();
 
     if (fork()==0){
-        sleep(100);
+        sleep(5);
         join_container(cont_id1);
-        printf(1,"%d After Joining\n",getpid());
-        ps();
-        leave_container();
-        printf(1,"%d After Leaving\n",getpid());
-        ps();
-        sleep(100);
+        sleep(20);
         exit();
     }
-    leave_container();
-    wait();
-    wait();
+    sleep(2);
+    ps();
+    sleep(10);
     destroy_container(cont_id1);
+    ps();
     destroy_container(cont_id2);
+    wait();
     exit();
 }
