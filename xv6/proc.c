@@ -554,6 +554,7 @@ int create_container(){
   for(int i=1;i<MAX_CONTAINERS;i++){
     if (container_table.container_list[i].allocated==0){
       container_table.container_list[i].allocated=1;
+      container_table.container_list[i].num_procs=0;
       // release(&container_table.lock);
       return i;
     }
@@ -566,7 +567,8 @@ int destroy_container(int cont_id){
   if (cont_id>0 && container_table.container_list[cont_id].allocated){
     // acquire(&container_table.lock);
     container_table.container_list[cont_id].allocated=0;
-    
+    container_table.container_list[cont_id].num_procs=0;
+
     // cleanup_processes
     for(int i=0;i<MAX_PROC_PER_CONTAINER;i++){
       if (container_table.container_list[cont_id].procs[i]>0){
@@ -595,6 +597,7 @@ int join_container(int cont_id){
     if (container_table.container_list[cont_id].procs[i]==0){
       found_place=1;
       container_table.container_list[cont_id].procs[i]=pid;
+      container_table.container_list[cont_id].num_procs++;
       break;
     }
   }
@@ -626,6 +629,7 @@ int leave_container(){
     if (container_table.container_list[cont_id].procs[i]==pid){
       found_place=1;
       container_table.container_list[cont_id].procs[i]=0;
+      container_table.container_list[cont_id].num_procs--;
       break;
     }
   }
