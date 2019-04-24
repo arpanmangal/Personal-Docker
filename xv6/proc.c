@@ -315,6 +315,37 @@ wait(void)
   }
 }
 
+// Given the container id looks for the next process to run
+int container_scheduler(int cont_id){
+  if (cont_id==0){
+    for (int i=0;i<NPROC;i++){
+      if (ptable.proc[i].state==RUNNABLE && ptable.proc[i].container_id==0){
+        return i;
+      }
+    }
+    return -1;
+  }
+  
+  struct container_desc * curr_cont = &container_table.container_list[cont_id];
+  // If no processes to run return -1
+  if (curr_cont->allocated==0 || curr_cont->num_procs<1){
+    return -1;
+  }
+  int last_id = curr_cont->last_id_to_run;
+  
+  // search for new process to run
+  for(int i=1;i<=NPROC;i++){
+    if (ptable.proc[(last_id+i)%NPROC].state==RUNNABLE &&
+     ptable.proc[(last_id+i)%NPROC].container_id==cont_id 
+     && ptable.proc[(last_id+i)%NPROC].killed==0){
+      curr_cont->last_id_to_run = (last_id+i)%NPROC;
+      // cprintf("running %d in container %d\n",ptable.proc[(last_id+i)%NPROC].pid,cont_id );
+      return (last_id+i)%NPROC;
+    }
+  }
+  return -1;
+}
+
 //PAGEBREAK: 42
 // Per-CPU process scheduler.
 // Each CPU calls scheduler() after setting itself up.
@@ -323,6 +354,52 @@ wait(void)
 //  - swtch to start running that process
 //  - eventually that process transfers control
 //      via swtch back to the scheduler.
+void
+scheduler(void)
+{
+  struct proc *p;
+  struct cpu *c = mycpu();
+  c->proc = 0;
+  int last_container_run=-1;
+  int cont_iter;
+  int next_id_to_run;
+  
+  container_table.container_list[0].allocated=1;
+  container_table.container_list[0].num_procs=1;
+
+  for(;;){
+    // Enable interrupts on this processor.
+    sti();
+
+    // Loop over container table looking for container to run.
+    acquire(&ptable.lock);
+    for(cont_iter = 1; cont_iter<=NPROC ; cont_iter++){
+      // cprintf("running container %d\n",(last_container_run+cont_iter)%MAX_CONTAINERS);
+      next_id_to_run = container_scheduler((last_container_run+cont_iter)%MAX_CONTAINERS);
+      if (next_id_to_run==-1)
+        continue;
+      last_container_run = (last_container_run+cont_iter)%MAX_CONTAINERS;
+      cprintf("running process %d container %d\n",next_id_to_run,last_container_run);
+      p = &ptable.proc[next_id_to_run];
+      // Switch to chosen process.  It is the process's job
+      // to release ptable.lock and then reacquire it
+      // before jumping back to us.
+      c->proc = p;
+      switchuvm(p);
+      p->state = RUNNING;
+
+      swtch(&(c->scheduler), p->context);
+      switchkvm();
+
+      // Process is done running for now.
+      // It should have changed its p->state before coming back.
+      c->proc = 0;
+    }
+    release(&ptable.lock);
+
+  }
+}
+
 void
 scheduler(void)
 {

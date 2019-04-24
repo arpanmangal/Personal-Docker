@@ -66,6 +66,7 @@ struct container_desc{
   int allocated;
   int procs[MAX_PROC_PER_CONTAINER];
   int num_procs;
+  int last_id_to_run;
 };
 
 struct {
