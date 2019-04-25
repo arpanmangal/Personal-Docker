@@ -125,6 +125,7 @@ int             create_container(void);
 int             destroy_container(int);
 int             join_container(int);
 int             leave_container(void);
+int             get_container_id(void);
 
 // swtch.S
 void            swtch(struct context**, struct context*);
@@ -152,6 +153,8 @@ char*           safestrcpy(char*, const char*, int);
 int             strlen(const char*);
 int             strncmp(const char*, const char*, uint);
 char*           strncpy(char*, const char*, int);
+void            add_cont_id (char *old_str, char *new_str);
+void            remove_cont_id (char *str);
 
 // syscall.c
 int             argint(int, int*);

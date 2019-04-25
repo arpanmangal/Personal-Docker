@@ -118,3 +118,7 @@ int sys_join_container(void){
 int sys_leave_container(void){
   return leave_container();
 }
+
+int sys_get_container_id(void){
+  return get_container_id();
+} 

@@ -648,3 +648,8 @@ int leave_container(){
   release(&ptable.lock);
   return 0;
 }
+
+int get_container_id(void){
+  // return 0;
+  return myproc()->container_id;
+} 

@@ -16,6 +16,16 @@
 #include "file.h"
 #include "fcntl.h"
 
+
+// $$$
+// int strlen (char *str) {
+//   int len = 0;
+//   for (int i = 0; str[i] != '\0'; i++) len++;
+//   return len;
+// }
+
+// $$$
+
 // Fetch the nth word-sized system call argument as a file descriptor
 // and return both the descriptor and the corresponding struct file.
 static int
@@ -294,18 +304,25 @@ sys_open(void)
   if(argstr(0, &path) < 0 || argint(1, &omode) < 0)
     return -1;
 
+  char new_path[FNAMESIZE];
+  add_cont_id (path, new_path);
+
+  // cprintf("Old: %s\n", path);
+  // cprintf("New: %s\n", new_path);
   begin_op();
 
   if(omode & O_CREATE){
-    ip = create(path, T_FILE, 0, 0);
+    ip = create(new_path, T_FILE, 0, 0);
     if(ip == 0){
       end_op();
       return -1;
     }
   } else {
-    if((ip = namei(path)) == 0){
-      end_op();
-      return -1;
+    if((ip = namei(new_path)) == 0){
+      if((ip = namei(path)) == 0){
+        end_op();
+        return -1;
+      }
     }
     ilock(ip);
     if(ip->type == T_DIR && omode != O_RDONLY){
