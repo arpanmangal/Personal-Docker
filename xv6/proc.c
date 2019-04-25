@@ -315,6 +315,18 @@ wait(void)
   }
 }
 
+void container_sched(int container_id){
+  struct container_desc * cont = &container_table.container_list[container_id];
+  int id;
+  for (int i=0;i<=NPROC;i++){
+    id = (cont->last_run_id + i)%NPROC;
+    if (ptable.proc[id].container_id==container_id &&  ptable.proc[id].state==HIBERNATE){
+      ptable.proc[id].state = RUNNABLE;
+      return;
+    }
+  }  
+}
+
 //PAGEBREAK: 42
 // Per-CPU process scheduler.
 // Each CPU calls scheduler() after setting itself up.
@@ -350,6 +362,10 @@ scheduler(void)
       swtch(&(c->scheduler), p->context);
       switchkvm();
 
+      if (p->container_id!=0){
+        p->state = HIBERNATE;
+        container_sched(p->container_id);
+      }
       // Process is done running for now.
       // It should have changed its p->state before coming back.
       c->proc = 0;
