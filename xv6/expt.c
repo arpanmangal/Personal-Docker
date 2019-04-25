@@ -21,11 +21,11 @@ int main() {
     //     ls(".");
     //     sleep(100);
 
-        int fd = open("file_1", O_CREATE | O_RDWR);
-        if(fd < 0) {
-            printf(1, "Error creating file!!\n");
-            exit();
-        }
+    int fd = open("file_1", O_CREATE | O_RDWR);
+    if(fd < 0) {
+        printf(1, "Error creating file!!\n");
+        exit();
+    }
     printf(1,"After creation\n");
     ls(".");
 

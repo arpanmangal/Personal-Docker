@@ -185,6 +185,7 @@ UPROGS=\
 	_test_container\
 	_stress_test\
 	_expt\
+	_assig3\
 
 fs.img: mkfs README $(UPROGS)
 	./mkfs fs.img README $(UPROGS)
@@ -259,6 +260,7 @@ EXTRA=\
 	README dot-bochsrc *.pl toc.* runoff runoff1 runoff.list\
 	.gdbinit.tmpl gdbutil\
 	ps.c test_container.c\
+	assig3.c\
 
 dist:
 	rm -rf dist
