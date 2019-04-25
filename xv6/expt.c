@@ -85,6 +85,34 @@ int main() {
     //         exit();
     //     }
     // cat("file_1");
+    id = create_container();
+    printf(1,"Before joining\n");
+    // ls(".");
+    join_container(id);
+    printf(1,"After joining\n");
+    ls(".");
+    fd = open("file_1", O_CREATE | O_RDWR);
+        if(fd < 0) {
+            printf(1, "Error creating file!!\n");
+            exit();
+        }
+    printf(1,"After creation\n");
+    ls(".");
+
+        char MSG2[] = "Modified by: #The new one\n";
+        printf (1, "%s\n", MSG2);
+        size = sizeof(MSG2);
+        if (write (fd, MSG2, size) != size) {
+            printf(1, "Error writing to file");
+            exit();
+        }
+
+    cat ("file_1");
+
+    leave_container();
+    printf(1,"After leaving\n");
+    ls(".");
+
     destroy_container (id);
     exit();
 }

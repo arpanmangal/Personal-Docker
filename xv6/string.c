@@ -113,11 +113,3 @@ void add_cont_id (char *old_str, char *new_str) {
   new_str[i++] = get_container_id () + '0';
   new_str[i++] = '\0';
 }
-
-void remove_cont_id (char *str) {
-  // Go to end
-  int i = 0;
-  while (str[i] != '\0') i++;
-  i -= 2;
-  str[i] = '\0';
-}

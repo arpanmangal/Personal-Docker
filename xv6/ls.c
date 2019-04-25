@@ -3,6 +3,28 @@
 #include "user.h"
 #include "fs.h"
 
+int remove_cont_id (char *str) {
+  // Go to end
+  int i = 0;
+  for (i = 0; !(str[i] == '#' || str[i] == '\0'); i++);
+  // printf(1, "%s %d", str, i);// str[i]);
+  if (str[i] == '#') {
+    int cont_id = str[i+1] - '0';
+    str[i] = ' ';
+    str[i+1] = ' ';
+    return cont_id;
+  }
+
+  return -1;
+  // while (str[i] != '\0') i++;
+  // i -= 2;
+  // if (str[i] == '#') {
+    
+  // } else {
+  //   return -1;
+  // }
+}
+
 char*
 fmtname(char *path)
 {
@@ -41,9 +63,16 @@ ls(char *path)
     return;
   }
 
+  char *fname;
+
   switch(st.type){
   case T_FILE:
-    printf(1, "%s %d %d %d\n", fmtname(path), st.type, st.ino, st.size);
+    
+    fname = fmtname(path);
+    int rmv = remove_cont_id (fname);
+    if (rmv < 0 || rmv == get_container_id()) {
+      printf(1, "%d %s %d %d %d\n", rmv, fname, st.type, st.ino, st.size);
+    }
     break;
 
   case T_DIR:
@@ -63,7 +92,13 @@ ls(char *path)
         printf(1, "ls: cannot stat %s\n", buf);
         continue;
       }
-      printf(1, "%s %d %d %d\n", fmtname(buf), st.type, st.ino, st.size);
+
+      fname = fmtname(buf);
+      int rmv = remove_cont_id (fname);
+      if (rmv < 0 || rmv == get_container_id()) {
+        printf(1, "%s %d %d %d\n", fname, st.type, st.ino, st.size);
+      }
+      // printf(1, "DD %s %d %d %d\n", fmtname(buf), st.type, st.ino, st.size);
     }
     break;
   }
