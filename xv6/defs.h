@@ -154,7 +154,7 @@ int             strlen(const char*);
 int             strncmp(const char*, const char*, uint);
 char*           strncpy(char*, const char*, int);
 void            add_cont_id (char *old_str, char *new_str);
-void            remove_cont_id (char *str);
+int            remove_cont_id (char *str);
 
 // syscall.c
 int             argint(int, int*);
