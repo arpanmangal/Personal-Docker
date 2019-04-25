@@ -11,7 +11,7 @@ void container_master(int container_id){
     sleep(20*container_id);
     ps();
     printf(1,"---------\n");
-    sleep(20*(3-container_id));
+    sleep(20*(3-container_id) + container_id);
 
     if (container_id==1){
         toggle_scheduler_trace();
