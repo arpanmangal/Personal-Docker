@@ -168,24 +168,25 @@ mkfs: mkfs.c fs.h
 UPROGS=\
 	_cat\
 	_echo\
-	_forktest\
-	_grep\
 	_init\
 	_kill\
-	_ln\
 	_ls\
 	_mkdir\
 	_rm\
 	_sh\
-	_stressfs\
-	_usertests\
-	_wc\
 	_zombie\
 	_ps\
-	_test_container\
-	_stress_test\
-	_expt\
 	_assig3\
+	# _forktest\
+	# _grep\
+	# _ln\
+	# _stressfs\
+	# _usertests\
+	# _wc\
+	# _expt\
+	# _test_container\
+	# _stress_test\
+
 
 fs.img: mkfs README $(UPROGS)
 	./mkfs fs.img README $(UPROGS)

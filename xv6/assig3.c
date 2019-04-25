@@ -11,31 +11,65 @@ void container_master(int container_id){
     sleep(20*container_id);
     ps();
     printf(1,"---------\n");
+    sleep(20*(3-container_id));
 
     // FILE SYSTEM TEST
-    sleep(60*pid);
+    sleep(100*(pid-3));
     printf(1,"\nProcess %d executing ls\n",pid);
     ls(".");
+    sleep(100*(8-pid));
+
+    // creating new file
+    char pid_char = pid+'0';
+    char new_file_name[7] = {'f','i','l','e','_',pid_char};
+    int fd = open(new_file_name, O_CREATE | O_RDWR);
+    close(fd);
+
+    sleep(100*(pid-3));
+    printf(1,"\nProcess %d executing ls after file creation\n",pid);
+    ls(".");
+
+    // BARRIER
+    sleep(100*(10-pid));
+
     
+    fd = open("my_file", O_CREATE | O_RDWR);
+    char msg[15] = "Modified by:  \n";
+    msg[13] = pid_char;
+    int size = sizeof(msg);
+    if (write (fd, msg, size) != size) {
+        printf(1, "Error writing to file");
+        exit();
+    }
+    close(fd);
+    sleep(50*pid);
+    printf(1,"\nProcess %d: my_file contains\n",pid);
+    cat("my_file");
 
-
-
+    leave_container();
     exit();
 }
 
 void container_slave(int container_id){
     int pid = getpid();
     join_container(container_id);
-    sleep(30*container_id);
+    sleep(90);
 
     // FILE SYSTEM TEST
-    sleep(60*pid);
+    sleep(100*(pid-3));
     printf(1,"\nProcess %d executing ls\n",pid);
     ls(".");
+    sleep(100*(8-pid));
 
     char pid_char = pid+'0';
-    int fd = open("file_1", O_CREATE | O_RDWR);
+    char new_file_name[7] = {'f','i','l','e','_',pid_char};
+    int fd = open(new_file_name, O_CREATE | O_RDWR);
+    close(fd);
 
+    sleep(100*(pid-3));
+    printf(1,"\nProcess %d executing ls after file creation\n",pid);
+    ls(".");
+    leave_container();
     exit();
 }
 
