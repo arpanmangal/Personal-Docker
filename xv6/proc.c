@@ -366,7 +366,8 @@ scheduler(void)
       switchkvm();
 
       if (p->container_id!=0){
-        p->state = HIBERNATE;
+        if (p->state==RUNNABLE)
+          p->state = HIBERNATE;
         container_sched(p->container_id);
       }
       // Process is done running for now.
