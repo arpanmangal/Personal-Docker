@@ -172,11 +172,10 @@ UPROGS=\
 	_kill\
 	_ls\
 	_mkdir\
-	_rm\
 	_sh\
-	_zombie\
 	_ps\
-	_assig3\
+	_user_test_assig3\
+	# _assig3\
 	# _forktest\
 	# _grep\
 	# _ln\
@@ -186,6 +185,8 @@ UPROGS=\
 	# _expt\
 	# _test_container\
 	# _stress_test\
+	# _zombie\
+	# _rm\
 
 
 fs.img: mkfs README $(UPROGS)
@@ -261,7 +262,7 @@ EXTRA=\
 	README dot-bochsrc *.pl toc.* runoff runoff1 runoff.list\
 	.gdbinit.tmpl gdbutil\
 	ps.c test_container.c\
-	assig3.c\
+	user_test_assig3.c\
 
 dist:
 	rm -rf dist

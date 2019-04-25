@@ -13,6 +13,14 @@ void container_master(int container_id){
     printf(1,"---------\n");
     sleep(20*(3-container_id));
 
+    if (container_id==1){
+        toggle_scheduler_trace();
+    }
+
+    if (container_id==3){
+        toggle_scheduler_trace();
+    }
+
     // FILE SYSTEM TEST
     sleep(100*(pid-3));
     printf(1,"\nProcess %d executing ls\n",pid);
@@ -30,7 +38,7 @@ void container_master(int container_id){
     ls(".");
 
     // BARRIER
-    sleep(100*(10-pid));
+    sleep(100*(9-pid));
 
     
     fd = open("my_file", O_CREATE | O_RDWR);
@@ -77,7 +85,7 @@ int main() {
     int cont1 =  create_container();
     int cont2 =  create_container();
     int cont3 =  create_container();
-    printf(1,"%d %d %d\n",cont1,cont2, cont3);
+    // printf(1,"%d %d %d\n",cont1,cont2, cont3);
 
     if (fork()==0){
         container_master(cont1);

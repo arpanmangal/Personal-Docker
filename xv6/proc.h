@@ -73,3 +73,5 @@ struct {
   // struct spinlock lock;
   struct container_desc container_list[MAX_CONTAINERS];
 } container_table;
+
+int scheduler_trace;

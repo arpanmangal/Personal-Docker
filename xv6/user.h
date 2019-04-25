@@ -31,6 +31,7 @@ int leave_container(void);
 void ls(char *path);
 void cat(char *path);
 int get_container_id(void);
+int toggle_scheduler_trace(void);
 
 
 // ulib.c

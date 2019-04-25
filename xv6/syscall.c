@@ -109,6 +109,7 @@ extern int sys_destroy_container(void);
 extern int sys_join_container(void);
 extern int sys_leave_container(void);
 extern int sys_get_container_id(void);
+extern int sys_toggle_scheduler_trace(void);
 
 static int (*syscalls[])(void) = {
 [SYS_fork]    sys_fork,
@@ -138,6 +139,7 @@ static int (*syscalls[])(void) = {
 [SYS_join_container] sys_join_container,
 [SYS_leave_container] sys_leave_container,
 [SYS_get_container_id] sys_get_container_id,
+[SYS_toggle_scheduler_trace] sys_toggle_scheduler_trace,
 };
 
 void

@@ -122,3 +122,7 @@ int sys_leave_container(void){
 int sys_get_container_id(void){
   return get_container_id();
 } 
+
+int sys_toggle_scheduler_trace(void){
+  return toggle_scheduler_trace();
+}

@@ -126,6 +126,7 @@ int             destroy_container(int);
 int             join_container(int);
 int             leave_container(void);
 int             get_container_id(void);
+int             toggle_scheduler_trace(void);
 
 // swtch.S
 void            swtch(struct context**, struct context*);
